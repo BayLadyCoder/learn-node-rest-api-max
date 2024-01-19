@@ -1,0 +1,22 @@
+{
+  "name": "learn-node-rest-api-max",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BayLadyCoder/learn-node-rest-api-max.git"
+  },
+  "author": "BayLadyCoder",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BayLadyCoder/learn-node-rest-api-max/issues"
+  },
+  "homepage": "https://github.com/BayLadyCoder/learn-node-rest-api-max#readme",
+  "dependencies": {
+    "express": "4.18.2"
+  }
+}
