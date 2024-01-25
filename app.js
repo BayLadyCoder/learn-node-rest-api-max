@@ -1,11 +1,14 @@
+require('dotenv').config();
+
 const express = require('express');
+const mongoose = require('mongoose');
 
 const postsRoutes = require('./routes/posts');
 
 const app = express();
 const PORT = 8080;
 
-// app.use(express.urlencoded()); // x-www-form-urlencoded <form></form>
+// app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencoded <form></form>
 app.use(express.json()); // application/json
 
 app.use((req, res, next) => {
@@ -18,6 +21,17 @@ app.use((req, res, next) => {
 
 app.use('/api', postsRoutes);
 
-app.listen(PORT, () => {
-  console.log(`App is listening to port ${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('database connected');
+
+    app.listen(PORT, () => {
+      console.log(`Listening to port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log('Mongoose connection error: ', err);
+    // having issue connecting with the database
+    throw new Error(err);
+  });
