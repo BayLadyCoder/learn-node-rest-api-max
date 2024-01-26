@@ -3,40 +3,13 @@ const { validationResult } = require('express-validator');
 const Post = require('../models/post');
 
 exports.getPosts = (req, res, next) => {
-  res.status(200).json({
-    posts: [
-      {
-        id: 1,
-        title: 'First Post',
-        content: 'This is the first post!',
-        imageUrl: 'images/duck.jpg',
-        author: {
-          name: 'Bay',
-        },
-        createdAt: new Date(),
-      },
-      {
-        id: 2,
-        title: 'Second Post',
-        content: 'This is the second post!',
-        imageUrl: 'images/duck.jpg',
-        author: {
-          name: 'Oreo',
-        },
-        createdAt: new Date(),
-      },
-      {
-        id: 3,
-        title: 'Third Post',
-        content: 'This is the third post!',
-        imageUrl: 'images/duck.jpg',
-        author: {
-          name: 'Taylor',
-        },
-        createdAt: new Date(),
-      },
-    ],
-  });
+  Post.find()
+    .then((posts) => {
+      res.status(200).json({
+        posts,
+      });
+    })
+    .catch((err) => next(err));
 };
 
 exports.createPost = (req, res, next) => {
@@ -58,31 +31,11 @@ exports.createPost = (req, res, next) => {
 
   post
     .save()
-    .then((result) => {
-      const {
-        _id: id,
-        title,
-        content,
-        imageUrl,
-        author,
-        createdAt,
-        updatedAt,
-      } = result;
-
+    .then((post) => {
       res.status(201).json({
         message: 'Post created successfully!',
-        post: {
-          id,
-          title,
-          content,
-          imageUrl,
-          author,
-          createdAt,
-          updatedAt,
-        },
+        post,
       });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch((err) => next(err));
 };
