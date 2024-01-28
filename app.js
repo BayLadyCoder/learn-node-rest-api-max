@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const postsRoutes = require('./routes/posts');
 
@@ -10,6 +11,7 @@ const PORT = 8080;
 
 // app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencoded <form></form>
 app.use(express.json()); // application/json
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
   //   res.setHeader('Access-Control-Allow-Origin', 'https://cdpn.io');
