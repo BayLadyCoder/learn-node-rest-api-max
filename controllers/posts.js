@@ -39,11 +39,17 @@ exports.createPost = (req, res, next) => {
     throw error;
   }
 
+  if (!req.file) {
+    const error = new Error('No image provided.');
+    error.statusCode = 422;
+    throw error;
+  }
+
   const { title, content } = req.body;
   const post = new Post({
     title,
     content,
-    imageUrl: 'images/duck.jpg',
+    imageUrl: req.file.path,
     author: { name: 'Bay' },
   });
 
