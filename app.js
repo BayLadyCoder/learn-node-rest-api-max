@@ -38,7 +38,7 @@ app.use(multer({ storage: fileStorage, fileFilter }).single('image')); //
 app.use((req, res, next) => {
   //   res.setHeader('Access-Control-Allow-Origin', 'https://cdpn.io');
   res.setHeader('Access-Control-Allow-Origin', '*'); // allow requesting code from any origin to access the resource
-  res.setHeader('Access-Control-Allow-Method', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
