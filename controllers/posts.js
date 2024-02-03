@@ -117,3 +117,26 @@ const clearImage = (filePath) => {
   filePath = path.join(__dirname, '..', filePath);
   fs.unlink(filePath, (err) => console.log(err));
 };
+
+exports.deletePost = (req, res, next) => {
+  const { postId } = req.params;
+
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        const error = new Error('Could not find post.');
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // todo: check if logged in user is author of this post
+      clearImage(post.imageUrl);
+      return Post.findByIdAndDelete(postId);
+    })
+    .then((post) => {
+      res
+        .status(200)
+        .json({ message: 'Post is removed successfully.', postId: post._id });
+    })
+    .catch((err) => next(err));
+};
