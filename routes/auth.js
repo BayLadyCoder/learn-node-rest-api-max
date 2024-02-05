@@ -25,4 +25,13 @@ router.post(
   authController.signUp
 );
 
+router.post(
+  '/auth/login',
+  [
+    body('email').isEmail().withMessage('Invalid email.').normalizeEmail(),
+    body('password').trim().isLength({ min: 5, max: 30 }),
+  ],
+  authController.login
+);
+
 module.exports = router;
