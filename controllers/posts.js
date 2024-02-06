@@ -53,7 +53,7 @@ exports.createPost = (req, res, next) => {
     title,
     content,
     imageUrl: req.file.path,
-    author: { name: 'Bay' },
+    author: { username: req.username, id: req.userId },
   });
 
   post
