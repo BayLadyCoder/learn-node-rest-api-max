@@ -8,7 +8,7 @@ const User = require('../models/user');
 exports.getPosts = (req, res, next) => {
   Post.find()
     .then((posts) => {
-      posts.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // sort newest to oldest
+      posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // sort newest to oldest
       res.status(200).json({
         posts,
       });
