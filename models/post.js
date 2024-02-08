@@ -16,8 +16,14 @@ const postSchema = new Schema(
       required: true,
     },
     author: {
-      type: Object,
-      required: true,
+      _id: {
+        type: String,
+        required: true,
+      },
+      username: {
+        type: String,
+        required: true,
+      },
     },
   },
   { timestamps: true } // auto generate createdAt and updatedAt
