@@ -16,6 +16,7 @@ const generateRandomUsername = () => {
 exports.generateNewUsername = () => {
   const username = generateRandomUsername();
   return User.find({ username }).then((user) => {
+    // if this username exists in the database, generate a new random username
     if (user.length > 0) {
       return generateNewUsername();
     }
