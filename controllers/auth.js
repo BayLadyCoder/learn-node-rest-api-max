@@ -4,14 +4,14 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const { generateNewUsername } = require('../helpers/generateNewUsername');
+const {
+  createErrorWithStatusCode,
+} = require('../helpers/createErrorWithStatusCode');
 
 exports.signUp = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const error = new Error('Validation failed.');
-    error.statusCode = 422;
-    error.errors = errors.array();
-    return next(error);
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return next(createErrorWithStatusCode(validationErrors.array(), 422));
   }
 
   const { email, password } = req.body;
