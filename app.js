@@ -7,6 +7,7 @@ const multer = require('multer');
 
 const postsRoutes = require('./routes/posts');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 const app = express();
 const PORT = 8080;
@@ -46,6 +47,7 @@ app.use((req, res, next) => {
 
 app.use('/api', postsRoutes);
 app.use('/api', authRoutes);
+app.use('/api', userRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
