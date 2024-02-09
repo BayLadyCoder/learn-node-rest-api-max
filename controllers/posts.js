@@ -43,17 +43,11 @@ exports.createPost = (req, res, next) => {
     throw error;
   }
 
-  if (!req.file) {
-    const error = new Error('No image provided.');
-    error.statusCode = 422;
-    throw error;
-  }
-
   const { title, content } = req.body;
   const post = new Post({
     title,
     content,
-    imageUrl: req.file.path,
+    imageUrl: req.file?.path,
     author: { _id: req.userId, username: req.username },
   });
 
@@ -92,12 +86,6 @@ exports.updatePost = (req, res, next) => {
     imageUrl = req.file.path;
   }
 
-  if (!imageUrl) {
-    const error = new Error('No file picked.');
-    error.statusCode = 422;
-    throw error;
-  }
-
   Post.findById(postId)
     .then((post) => {
       if (!post) {
@@ -106,13 +94,15 @@ exports.updatePost = (req, res, next) => {
         throw error;
       }
 
-      if (imageUrl !== post.imageUrl) {
+      if (!!post.imageUrl && imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
       }
 
       post.title = title;
       post.content = content;
-      post.imageUrl = imageUrl;
+      if (imageUrl) {
+        post.imageUrl = imageUrl;
+      }
       return post.save();
     })
     .then((result) => {
@@ -138,7 +128,10 @@ exports.deletePost = (req, res, next) => {
       }
 
       // todo: check if logged in user is author of this post
-      clearImage(post.imageUrl);
+      if (post.imageUrl) {
+        clearImage(post.imageUrl);
+      }
+
       return Post.findByIdAndDelete(postId);
     })
     .then((post) => {
