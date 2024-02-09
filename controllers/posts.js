@@ -94,6 +94,14 @@ exports.updatePost = (req, res, next) => {
         throw error;
       }
 
+      if (post.author.id !== req.userId) {
+        const error = new Error(
+          "Only post's author is allowed to update this post."
+        );
+        error.statusCode = 403;
+        throw error;
+      }
+
       if (!!post.imageUrl && imageUrl !== post.imageUrl) {
         clearImage(post.imageUrl);
       }
@@ -122,6 +130,13 @@ exports.deletePost = (req, res, next) => {
       if (!post) {
         const error = new Error('Could not find post.');
         error.statusCode = 404;
+        throw error;
+      }
+      if (post.author.id !== req.userId) {
+        const error = new Error(
+          "Only post's author is allowed to delete this post."
+        );
+        error.statusCode = 403;
         throw error;
       }
 
