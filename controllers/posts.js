@@ -100,9 +100,7 @@ exports.updatePost = (req, res, next) => {
 
       post.title = title;
       post.content = content;
-      if (imageUrl) {
-        post.imageUrl = imageUrl;
-      }
+      post.imageUrl = imageUrl;
       return post.save();
     })
     .then((result) => {
