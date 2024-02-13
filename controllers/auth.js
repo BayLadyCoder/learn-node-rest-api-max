@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const { generateNewUsername } = require('../helpers/generateNewUsername');
@@ -9,6 +8,7 @@ const {
 } = require('../helpers/createErrorWithStatusCode');
 
 const { createDisplayDateInfo } = require('../helpers/dateTime/formatDateTime');
+const { createJwtToken } = require('../helpers/auth/jwt');
 
 exports.signUp = async (req, res, next) => {
   const validationErrors = validationResult(req);
@@ -31,11 +31,14 @@ exports.signUp = async (req, res, next) => {
       password: hashedPassword,
     });
     const user = await newUser.save();
+    const token = createJwtToken(user, email);
 
     res.status(201).json({
       message: 'User created successfully',
+      token,
       userId: user._id,
       username: user.username,
+      cakeDay: createDisplayDateInfo(user.createdAt),
     });
   } catch (err) {
     next(err);
@@ -60,13 +63,7 @@ exports.login = async (req, res, next) => {
       throw error;
     }
 
-    const token = jwt.sign(
-      { email, userId: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '3h',
-      }
-    );
+    const token = createJwtToken(user, email);
 
     res.status(200).json({
       token,
