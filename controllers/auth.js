@@ -8,6 +8,8 @@ const {
   createErrorWithStatusCode,
 } = require('../helpers/createErrorWithStatusCode');
 
+const { createDisplayDateInfo } = require('../helpers/dateTime/formatDateTime');
+
 exports.signUp = async (req, res, next) => {
   const validationErrors = validationResult(req);
   if (!validationErrors.isEmpty()) {
@@ -65,9 +67,13 @@ exports.login = async (req, res, next) => {
         expiresIn: '3h',
       }
     );
-    res
-      .status(200)
-      .json({ token, userId: user._id.toString(), username: user.username });
+
+    res.status(200).json({
+      token,
+      userId: user._id.toString(),
+      username: user.username,
+      cakeDay: createDisplayDateInfo(user.createdAt),
+    });
   } catch (err) {
     next(err);
   }
