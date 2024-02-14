@@ -94,7 +94,7 @@ exports.updatePost = (req, res, next) => {
         throw error;
       }
 
-      if (post.author.id !== req.userId) {
+      if (post.author._id !== req.userId) {
         const error = new Error(
           "Only post's author is allowed to update this post."
         );
@@ -132,7 +132,8 @@ exports.deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
-      if (post.author.id !== req.userId) {
+
+      if (post.author._id !== req.userId) {
         const error = new Error(
           "Only post's author is allowed to delete this post."
         );
@@ -140,7 +141,6 @@ exports.deletePost = (req, res, next) => {
         throw error;
       }
 
-      // todo: check if logged in user is author of this post
       if (post.imageUrl) {
         clearImage(post.imageUrl);
       }
