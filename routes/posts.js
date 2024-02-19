@@ -30,9 +30,10 @@ router.put(
     body('title', 'Title must be between 1-100 characters.')
       .trim()
       .isLength({ min: 1, max: 100 }),
-    body('content', 'Content must be between 1-400 characters.')
-      .trim()
-      .isLength({ min: 1, max: 400 }),
+    body('content', 'Content must be between 1-400 characters.').isLength({
+      min: 1,
+      max: 5000,
+    }),
   ],
   postsController.updatePost
 );
