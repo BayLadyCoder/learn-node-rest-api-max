@@ -61,8 +61,20 @@ mongoose
   .then(() => {
     console.log('database connected');
 
-    app.listen(PORT, () => {
+    const httpServer = app.listen(PORT, () => {
       console.log(`Listening to port ${PORT}`);
+    });
+
+    const { Server } = require('socket.io');
+
+    const io = new Server(httpServer, {
+      cors: {
+        origin: 'http://localhost:5173',
+      },
+    });
+
+    io.on('connection', (socket) => {
+      console.log('Client connected!');
     });
   })
   .catch((err) => {
