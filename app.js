@@ -67,6 +67,7 @@ mongoose
 
     const { Server } = require('socket.io');
 
+    // https://socket.io/docs/v4/handling-cors/
     const io = new Server(httpServer, {
       cors: {
         origin: 'http://localhost:5173',
