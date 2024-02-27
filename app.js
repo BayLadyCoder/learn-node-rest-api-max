@@ -9,6 +9,8 @@ const postsRoutes = require('./routes/posts');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 
+const io = require('./socket/socket');
+
 const app = express();
 const PORT = 8080;
 const fileStorage = multer.diskStorage({
@@ -65,18 +67,7 @@ mongoose
       console.log(`Listening to port ${PORT}`);
     });
 
-    const { Server } = require('socket.io');
-
-    // https://socket.io/docs/v4/handling-cors/
-    const io = new Server(httpServer, {
-      cors: {
-        origin: 'http://localhost:5173',
-      },
-    });
-
-    io.on('connection', (socket) => {
-      console.log('Client connected!');
-    });
+    io.init(httpServer);
   })
   .catch((err) => {
     console.log('Mongoose connection error: ', err);
