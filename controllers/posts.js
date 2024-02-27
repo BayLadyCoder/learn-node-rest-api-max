@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 
 const Post = require('../models/post');
 const User = require('../models/user');
+const io = require('../socket/io');
 
 exports.getPosts = (req, res, next) => {
   Post.find()
