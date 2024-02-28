@@ -35,7 +35,7 @@ exports.getPost = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-exports.createPost = (req, res, next) => {
+exports.createPost = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is invalid.');
@@ -45,29 +45,27 @@ exports.createPost = (req, res, next) => {
   }
 
   const { title, content } = req.body;
-  const post = new Post({
-    title,
-    content,
-    imageUrl: req.file?.path,
-    author: { _id: req.userId, username: req.username },
-  });
 
-  post
-    .save()
-    .then(() => {
-      return User.findById(req.userId);
-    })
-    .then((user) => {
-      user.posts.push(post);
-      return user.save();
-    })
-    .then(() => {
-      res.status(201).json({
-        message: 'Post created successfully!',
-        post,
-      });
-    })
-    .catch((err) => next(err));
+  try {
+    const post = new Post({
+      title,
+      content,
+      imageUrl: req.file?.path,
+      author: { _id: req.userId, username: req.username },
+    });
+    post.save();
+
+    const user = await User.findById(req.userId);
+    user.posts.push(post);
+    await user.save();
+
+    res.status(201).json({
+      message: 'Post created successfully!',
+      post,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.updatePost = (req, res, next) => {
