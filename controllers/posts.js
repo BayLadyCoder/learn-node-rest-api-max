@@ -123,35 +123,34 @@ const clearImage = (filePath) => {
   fs.unlink(filePath, (err) => console.log(err));
 };
 
-exports.deletePost = (req, res, next) => {
-  const { postId } = req.params;
+exports.deletePost = async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.findById(postId);
+    if (!post) {
+      const error = new Error('Could not find post.');
+      error.statusCode = 404;
+      throw error;
+    }
 
-  Post.findById(postId)
-    .then((post) => {
-      if (!post) {
-        const error = new Error('Could not find post.');
-        error.statusCode = 404;
-        throw error;
-      }
+    if (post.author._id !== req.userId) {
+      const error = new Error(
+        "Only post's author is allowed to delete this post."
+      );
+      error.statusCode = 403;
+      throw error;
+    }
 
-      if (post.author._id !== req.userId) {
-        const error = new Error(
-          "Only post's author is allowed to delete this post."
-        );
-        error.statusCode = 403;
-        throw error;
-      }
+    if (post.imageUrl) {
+      clearImage(post.imageUrl);
+    }
 
-      if (post.imageUrl) {
-        clearImage(post.imageUrl);
-      }
-
-      return Post.findByIdAndDelete(postId);
-    })
-    .then((post) => {
-      res
-        .status(200)
-        .json({ message: 'Post is removed successfully.', postId: post._id });
-    })
-    .catch((err) => next(err));
+    const deletedPost = await Post.findByIdAndDelete(postId);
+    res.status(200).json({
+      message: 'Post is removed successfully.',
+      postId: deletedPost._id,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
