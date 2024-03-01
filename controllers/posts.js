@@ -59,6 +59,8 @@ exports.createPost = async (req, res, next) => {
     user.posts.push(post);
     await user.save();
 
+    io.getIO().emit('posts', { action: 'create', post });
+
     res.status(201).json({
       message: 'Post created successfully!',
       post,
