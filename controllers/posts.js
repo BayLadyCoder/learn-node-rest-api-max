@@ -112,6 +112,7 @@ exports.updatePost = async (req, res, next) => {
     post.imageUrl = imageUrl;
 
     const updatedPost = await post.save();
+    io.getIO().emit('posts', { action: 'update', post: updatedPost });
     res.status(200).json({ post: updatedPost });
   } catch (err) {
     next(err);
