@@ -70,7 +70,7 @@ exports.createPost = async (req, res, next) => {
   }
 };
 
-exports.updatePost = (req, res, next) => {
+exports.updatePost = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed, entered data is invalid.');
@@ -87,35 +87,35 @@ exports.updatePost = (req, res, next) => {
     imageUrl = req.file.path;
   }
 
-  Post.findById(postId)
-    .then((post) => {
-      if (!post) {
-        const error = new Error('Could not find post.');
-        error.statusCode = 404;
-        throw error;
-      }
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      const error = new Error('Could not find post.');
+      error.statusCode = 404;
+      throw error;
+    }
 
-      if (post.author._id !== req.userId) {
-        const error = new Error(
-          "Only post's author is allowed to update this post."
-        );
-        error.statusCode = 403;
-        throw error;
-      }
+    if (post.author._id !== req.userId) {
+      const error = new Error(
+        "Only post's author is allowed to update this post."
+      );
+      error.statusCode = 403;
+      throw error;
+    }
 
-      if (!!post.imageUrl && imageUrl !== post.imageUrl) {
-        clearImage(post.imageUrl);
-      }
+    if (!!post.imageUrl && imageUrl !== post.imageUrl) {
+      clearImage(post.imageUrl);
+    }
 
-      post.title = title;
-      post.content = content;
-      post.imageUrl = imageUrl;
-      return post.save();
-    })
-    .then((result) => {
-      res.status(200).json({ post: result });
-    })
-    .catch((err) => next(err));
+    post.title = title;
+    post.content = content;
+    post.imageUrl = imageUrl;
+
+    const updatedPost = await post.save();
+    res.status(200).json({ post: updatedPost });
+  } catch (err) {
+    next(err);
+  }
 };
 
 const clearImage = (filePath) => {
