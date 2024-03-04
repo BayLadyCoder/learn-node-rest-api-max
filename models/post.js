@@ -17,6 +17,7 @@ const postSchema = new Schema(
     author: {
       _id: {
         type: String,
+        required: true,
       },
       username: {
         type: String,
