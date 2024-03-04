@@ -53,7 +53,7 @@ exports.createPost = async (req, res, next) => {
       imageUrl: req.file?.path,
       author: { _id: req.userId, username: req.username },
     });
-    post.save();
+    await post.save();
 
     const user = await User.findById(req.userId);
     user.posts.push(post);
