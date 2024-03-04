@@ -24,6 +24,7 @@ const postSchema = new Schema(
         required: true,
       },
     },
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   },
   { timestamps: true } // auto generate createdAt and updatedAt
 );
