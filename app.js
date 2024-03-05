@@ -8,6 +8,7 @@ const multer = require('multer');
 const postsRoutes = require('./routes/posts');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const commentsRoutes = require('./routes/comments');
 
 const io = require('./socket/io');
 
@@ -50,6 +51,7 @@ app.use((req, res, next) => {
 app.use('/api', postsRoutes);
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
+app.use('/api', commentsRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
