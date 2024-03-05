@@ -11,7 +11,16 @@ const commentSchema = new Schema(
       type: String,
       required: true,
     },
-    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    author: {
+      _id: {
+        type: String,
+        required: true,
+      },
+      username: {
+        type: String,
+        required: true,
+      },
+    },
   },
   { timestamps: true } // auto generate createdAt and updatedAt
 );
