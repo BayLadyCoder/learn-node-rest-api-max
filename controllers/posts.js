@@ -21,6 +21,7 @@ exports.getPost = (req, res, next) => {
   const { postId } = req.params;
 
   Post.findById(postId)
+    .populate('comments')
     .then((post) => {
       if (!post) {
         const error = new Error('Could not find post.');
