@@ -1,6 +1,7 @@
 const Comment = require('../models/comment');
 const User = require('../models/user');
 const Post = require('../models/post');
+const io = require('../socket/io');
 
 exports.createComment = async (req, res, next) => {
   const { comment, authorId, postId } = req.body;
@@ -21,6 +22,8 @@ exports.createComment = async (req, res, next) => {
 
     post.comments.push(newComment);
     await post.save();
+
+    io.getIO().emit('comments', { action: 'create', comment: newComment });
 
     res.status(201).send({ comment: newComment });
   } catch (err) {
