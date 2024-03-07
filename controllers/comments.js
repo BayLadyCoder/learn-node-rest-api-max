@@ -34,11 +34,10 @@ exports.createComment = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
   const { commentId } = req.params;
   try {
-    await Comment.findByIdAndDelete(commentId);
+    const comment = await Comment.findByIdAndDelete(commentId);
 
-    res
-      .status(200)
-      .send({ message: 'Comment deleted successfully', commentId });
+    io.getIO().emit('comments', { action: 'delete', comment });
+    res.status(200).send({ message: 'Comment deleted successfully', comment });
   } catch (err) {
     next(err);
   }
