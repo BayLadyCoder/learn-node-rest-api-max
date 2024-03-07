@@ -34,10 +34,22 @@ exports.createComment = async (req, res, next) => {
 exports.deleteComment = async (req, res, next) => {
   const { commentId } = req.params;
   try {
-    const comment = await Comment.findByIdAndDelete(commentId);
+    const comment = await Comment.findById(commentId);
+    const userId = req.userId;
 
-    io.getIO().emit('comments', { action: 'delete', comment });
-    res.status(200).send({ message: 'Comment deleted successfully', comment });
+    if (comment.author._id !== userId) {
+      return res.status(403).send({
+        message: "Only comment's author is allowed to delete this comment",
+      });
+    }
+
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
+
+    io.getIO().emit('comments', { action: 'delete', comment: deletedComment });
+    res.status(200).send({
+      message: 'Comment deleted successfully',
+      comment: deletedComment,
+    });
   } catch (err) {
     next(err);
   }
