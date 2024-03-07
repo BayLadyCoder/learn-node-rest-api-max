@@ -19,4 +19,6 @@ router.post(
   commentsController.createComment
 );
 
+router.delete('/comments/:commentId', isAuth, commentsController.deleteComment);
+
 module.exports = router;

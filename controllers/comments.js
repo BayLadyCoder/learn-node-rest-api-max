@@ -30,3 +30,16 @@ exports.createComment = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteComment = async (req, res, next) => {
+  const { commentId } = req.params;
+  try {
+    await Comment.findByIdAndDelete(commentId);
+
+    res
+      .status(200)
+      .send({ message: 'Comment deleted successfully', commentId });
+  } catch (err) {
+    next(err);
+  }
+};
