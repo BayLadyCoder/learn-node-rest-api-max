@@ -67,7 +67,7 @@ exports.login = async (req, res, next) => {
 
     res.status(200).json({
       token,
-      userId: user._id.toString(),
+      _id: user._id.toString(),
       username: user.username,
       cakeDay: createDisplayDateInfo(user.createdAt),
     });
