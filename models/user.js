@@ -9,6 +9,7 @@ const userSchema = new Schema(
     isOnline: { type: Boolean, default: false },
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    votes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
   },
   { timestamps: true } // auto generate createdAt and updatedAt
 );
