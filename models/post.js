@@ -25,6 +25,7 @@ const postSchema = new Schema(
       },
     },
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+    votingScores: { type: Number, required: true, default: 0 },
   },
   { timestamps: true } // auto generate createdAt and updatedAt
 );
