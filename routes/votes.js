@@ -19,4 +19,6 @@ router.put(
   votesController.updateOrCreateVote
 );
 
+router.delete('/votes/:voteId', isAuth, votesController.deleteVote);
+
 module.exports = router;
