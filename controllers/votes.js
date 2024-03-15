@@ -70,3 +70,25 @@ exports.updateOrCreateVote = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteVote = async (req, res, next) => {
+  try {
+    const { voteId } = req.params;
+    const vote = await Vote.findById(voteId);
+    const post = await Post.findById(vote.postId);
+
+    await vote.deleteOne();
+
+    if (vote.isUpVote) {
+      post.votingScores = post.votingScores - 1;
+    } else {
+      post.votingScores = post.votingScores + 1;
+    }
+
+    await post.save();
+
+    res.status(200).send({ vote, message: 'Unvoted successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
