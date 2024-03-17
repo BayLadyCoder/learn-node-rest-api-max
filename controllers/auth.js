@@ -49,7 +49,7 @@ exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate('votes');
     if (!user) {
       const error = new Error('Invalid email or password.');
       error.statusCode = 401;
@@ -70,6 +70,7 @@ exports.login = async (req, res, next) => {
       _id: user._id.toString(),
       username: user.username,
       cakeDay: createDisplayDateInfo(user.createdAt),
+      votes: user.votes,
     });
   } catch (err) {
     next(err);
