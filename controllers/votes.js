@@ -10,7 +10,7 @@ exports.getUserVotes = async (req, res, next) => {
 
 exports.updateOrCreateVote = async (req, res, next) => {
   try {
-    const { isUpVote, userId, postId, _id } = req.body;
+    const { isUpVote, userId, postId } = req.body;
     let vote;
 
     const user = await User.findById(userId).populate('votes');
@@ -22,21 +22,13 @@ exports.updateOrCreateVote = async (req, res, next) => {
       error.statusCode = 404;
       return next(error);
     }
+    vote = user.votes.find((v) => v.postId === postId);
 
-    if (_id) {
-      vote = await Vote.findById(_id);
-
-      if (!vote) {
-        const error = new Error('Invalid vote id');
-        error.statusCode = 404;
-        return next(error);
-      }
-
+    if (vote) {
       const previousVoteIsUpVote = vote.isUpVote;
       if (previousVoteIsUpVote === isUpVote) {
-        return res.status(200).send({ message: 'Voted successfully', vote });
+        return res.status(200).send({ vote });
       }
-
       vote.isUpVote = isUpVote;
 
       user.votes = user.votes.map((v) => {
